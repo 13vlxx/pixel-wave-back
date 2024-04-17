@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -32,6 +32,8 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService<EnvironmentVariables, true>);
   await app.listen(configService.get('PORT'));
-  console.log('Launched on port: ', await app.getUrl());
+  new Logger().debug(
+    `Server running on http://localhost:${configService.get('PORT')}`,
+  );
 }
 bootstrap();
