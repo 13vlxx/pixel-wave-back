@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { createUserDto } from './_utils/dtos/requests/create-user.dto';
+import { CreateUserDto } from './_utils/dtos/requests/create-user.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -17,7 +17,7 @@ export class UsersRepository {
   findByPseudo = (pseudo: string) =>
     this.prismaService.user.findUnique({ where: { pseudo } });
 
-  create = (createUserDto: createUserDto, hashedPassword: string) =>
+  create = (createUserDto: CreateUserDto, hashedPassword: string) =>
     this.prismaService.user
       .create({ data: { ...createUserDto, password: hashedPassword } })
       .catch((error) => new ConflictException('Email already exists'));

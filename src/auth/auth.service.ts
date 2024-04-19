@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { createUserDto } from 'src/users/_utils/dtos/requests/create-user.dto';
+import { CreateUserDto } from 'src/users/_utils/dtos/requests/create-user.dto';
 import { UsersRepository } from 'src/users/users.repository';
 import { LoginUserDto } from './_utils/dtos/requests/login-user.dto';
 import { JwtPayload } from './_utils/jwt/jwt.payload';
@@ -13,7 +13,7 @@ export class AuthService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async register(createUserDto: createUserDto) {
+  async register(createUserDto: CreateUserDto) {
     const { email, pseudo, password } = createUserDto;
 
     if (await this.usersRepository.findByEmail(email))
@@ -33,7 +33,7 @@ export class AuthService {
     if (!user) throw new ConflictException('User not found');
 
     const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) throw new ConflictException('Invalid password');
+    if (!isValid) throw new ConflictException('Password is incorrect');
 
     return {
       user: {
