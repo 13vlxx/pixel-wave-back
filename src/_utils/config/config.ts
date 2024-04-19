@@ -9,6 +9,12 @@ export class EnvironmentVariables {
 
   @IsString()
   MYSQL_DATABASE_URL: string;
+
+  @IsString()
+  JWT_SECRET: string = 'PiXeeelWavEeSeCreeT';
+
+  @IsString()
+  JWT_EXPIRATION_TIME: string = '7d';
 }
 
 export function validateEnv(config: Record<string, unknown>) {

@@ -10,7 +10,9 @@ export class UsersRepository {
     this.prismaService.user.findUnique({ where: { id } });
 
   findByEmail = (email: string) =>
-    this.prismaService.user.findUnique({ where: { email } });
+    this.prismaService.user.findUnique({
+      where: { email },
+    });
 
   findByPseudo = (pseudo: string) =>
     this.prismaService.user.findUnique({ where: { pseudo } });
