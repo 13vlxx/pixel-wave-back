@@ -5,6 +5,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { validateEnv } from './_utils/config/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from './users/users.module';
     CacheModule.register({ isGlobal: true }),
     PrismaModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
