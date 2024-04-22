@@ -15,6 +15,21 @@ export class EnvironmentVariables {
 
   @IsString()
   JWT_EXPIRATION_TIME: string = '7d';
+
+  @IsString()
+  FRONT_URL: string;
+
+  @IsString()
+  SMTP_HOST: string;
+
+  @IsNumber()
+  SMTP_PORT: number;
+
+  @IsString()
+  SMTP_USERNAME: string;
+
+  @IsString()
+  SMTP_PASSWORD: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {

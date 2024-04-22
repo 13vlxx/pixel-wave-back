@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { EnvironmentVariables } from 'src/_utils/config/config';
+import { EmailsModule } from 'src/emails/emails.module';
 import { UsersModule } from 'src/users/users.module';
 import { JwtAuthGuard } from './_utils/jwt/jwt-auth.guard';
 import { JwtStrategy } from './_utils/jwt/jwt.strategy';
@@ -22,6 +23,7 @@ import { AuthService } from './auth.service';
       inject: [ConfigService],
     }),
     UsersModule,
+    EmailsModule,
   ],
   providers: [AuthService, JwtStrategy, JwtAuthGuard],
   controllers: [AuthController],
