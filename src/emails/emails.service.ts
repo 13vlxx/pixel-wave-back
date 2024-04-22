@@ -19,8 +19,13 @@ export class EmailsService {
       to: email,
       subject: 'Pixel Wave - Mot de passe oublié',
       template: 'lost-password.template.ejs',
-      text: `<a href="${this.configService.get(
+      html: `<a href="${this.configService.get(
         'FRONT_URL',
       )}reset-password?token=${passwordResetCode}&expire=${passwordResetCodeDate}">Reset your password</a>`,
+      context: {
+        resetPasswordURL: `${this.configService.get(
+          'FRONT_URL',
+        )}reset-password?token=${passwordResetCode}&expire=${passwordResetCodeDate}`,
+      },
     });
 }

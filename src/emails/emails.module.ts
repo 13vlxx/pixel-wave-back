@@ -22,7 +22,7 @@ import { EmailsService } from './emails.service';
           },
         },
         // template: {
-        //   dir: __dirname + '/template',
+        //   dir: join(__dirname, '..', 'emails', 'template'),
         //   adapter: new EjsAdapter(),
         // },
       }),
