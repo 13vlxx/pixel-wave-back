@@ -64,6 +64,10 @@ export class AuthService {
     );
     if (!user) throw new NotFoundException('Email not found');
 
+    if (user.resetPasswordCodeDate < dayjs().unix())
+      await this.usersRepository.updateCode(user.email, null, null);
+    else throw new ConflictException('A code has already been sent');
+
     const hashedCode = await bcrypt.hash(user.pseudo, 10);
     const expirationCodeDate = dayjs().unix() + 180;
 
