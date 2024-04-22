@@ -21,6 +21,6 @@ export class EmailsService {
       template: 'lost-password.template.ejs',
       text: `<a href="${this.configService.get(
         'FRONT_URL',
-      )}reset-password?code=${passwordResetCode}&time=${passwordResetCodeDate}">Reset your password</a>`,
+      )}reset-password?token=${passwordResetCode}&expire=${passwordResetCodeDate}">Reset your password</a>`,
     });
 }
