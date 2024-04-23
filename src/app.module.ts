@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailsModule } from './emails/emails.module';
 import { GamesModule } from './games/games.module';
+import { AdvicesModule } from './advices/advices.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GamesModule } from './games/games.module';
     AuthModule,
     EmailsModule,
     GamesModule,
+    AdvicesModule,
   ],
   controllers: [],
   providers: [],
