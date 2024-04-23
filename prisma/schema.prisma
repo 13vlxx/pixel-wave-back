@@ -26,6 +26,7 @@ model user {
   updatedAt             DateTime       @updatedAt
   user_setting          user_setting[]
   game                  game[]
+  game_advice           game_advice[]
 }
 
 model setting {
@@ -55,6 +56,18 @@ model game {
   game_category game_category[]
   game_platform game_platform[]
   media         media[]
+  game_advice   game_advice[]
+}
+
+model game_advice {
+  id_game String
+  id_user String
+  advice  String @db.Text()
+  note    Int
+  game    game   @relation(fields: [id_game], references: [id])
+  user    user   @relation(fields: [id_user], references: [id])
+
+  @@id([id_game, id_user])
 }
 
 model game_category {
