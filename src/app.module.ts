@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { EmailsModule } from './emails/emails.module';
 import { GamesModule } from './games/games.module';
 import { AdvicesModule } from './advices/advices.module';
+import { CategoriesModule } from './categories/categories.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { AdvicesModule } from './advices/advices.module';
     EmailsModule,
     GamesModule,
     AdvicesModule,
+    CategoriesModule,
+    HomeModule,
   ],
   controllers: [],
   providers: [],
