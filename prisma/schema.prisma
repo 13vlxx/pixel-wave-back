@@ -82,7 +82,7 @@ model game_category {
 model category {
   id            String          @id @default(cuid())
   name          String          @unique @db.VarChar(50)
-  logo          String          @default("default") @db.VarChar(255)
+  logo          String          @db.VarChar(255)
   game_category game_category[]
 }
 
@@ -98,6 +98,7 @@ model game_platform {
 model platform {
   id            String          @id @default(cuid())
   name          String          @unique @db.VarChar(50)
+  logo          String          @db.VarChar(255)
   game_platform game_platform[]
 }
 

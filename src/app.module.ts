@@ -11,6 +11,7 @@ import { GamesModule } from './games/games.module';
 import { AdvicesModule } from './advices/advices.module';
 import { CategoriesModule } from './categories/categories.module';
 import { HomeModule } from './home/home.module';
+import { PlatformsModule } from './platforms/platforms.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { HomeModule } from './home/home.module';
     AdvicesModule,
     CategoriesModule,
     HomeModule,
+    PlatformsModule,
   ],
   controllers: [],
   providers: [],
