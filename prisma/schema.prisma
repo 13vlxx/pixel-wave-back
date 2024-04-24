@@ -48,7 +48,7 @@ model game {
   id            String          @id @default(cuid())
   id_user       String
   user          user            @relation(fields: [id_user], references: [id])
-  name          String          @db.VarChar(50)
+  name          String          @unique @db.VarChar(50)
   logo          String          @db.VarChar(255)
   description   String          @db.Text()
   releaseDate   DateTime

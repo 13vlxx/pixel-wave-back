@@ -34,4 +34,52 @@ export class GamesRepository {
         },
       },
     });
+
+  findGameByName = (name: string) =>
+    this.prismaService.game.findUnique({
+      where: { name },
+      select: {
+        id: true,
+        name: true,
+        logo: true,
+        description: true,
+        releaseDate: true,
+        media: {
+          select: {
+            id: true,
+            type: true,
+            path: true,
+          },
+        },
+        game_platform: {
+          select: {
+            platform: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        game_advice: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                pseudo: true,
+                profilePicture: true,
+              },
+            },
+            game: {
+              select: {
+                id: true,
+                name: true,
+                logo: true,
+              },
+            },
+            advice: true,
+            note: true,
+          },
+        },
+      },
+    });
 }
