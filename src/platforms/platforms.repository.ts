@@ -5,12 +5,5 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PlatformsRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  findAll = () =>
-    this.prismaService.platform.findMany({
-      select: {
-        id: true,
-        name: true,
-        logo: true,
-      },
-    });
+  findAll = () => this.prismaService.platform.findMany();
 }

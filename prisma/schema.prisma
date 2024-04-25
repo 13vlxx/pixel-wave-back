@@ -25,7 +25,6 @@ model user {
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
   user_setting          user_setting[]
-  game                  game[]
   game_advice           game_advice[]
 }
 
@@ -46,8 +45,6 @@ model user_setting {
 
 model game {
   id            String          @id @default(cuid())
-  id_user       String
-  user          user            @relation(fields: [id_user], references: [id])
   name          String          @unique @db.VarChar(50)
   logo          String          @db.VarChar(255)
   description   String          @db.Text()
@@ -82,7 +79,7 @@ model game_category {
 model category {
   id            String          @id @default(cuid())
   name          String          @unique @db.VarChar(50)
-  logo          String          @db.VarChar(255)
+  image         String          @db.VarChar(255)
   game_category game_category[]
 }
 
@@ -98,7 +95,7 @@ model game_platform {
 model platform {
   id            String          @id @default(cuid())
   name          String          @unique @db.VarChar(50)
-  logo          String          @db.VarChar(255)
+  image         String          @db.VarChar(255)
   game_platform game_platform[]
 }
 
