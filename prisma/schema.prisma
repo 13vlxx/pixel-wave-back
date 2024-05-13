@@ -26,6 +26,9 @@ model user {
   updatedAt             DateTime       @updatedAt
   user_setting          user_setting[]
   game_advice           game_advice[]
+  post                  post[]
+  post_comment          post_comment[]
+  post_like             post_like[]
 }
 
 model setting {
@@ -105,6 +108,36 @@ model media {
   type    MediaEnum @default(IMAGE)
   path    String    @db.VarChar(255)
   game    game      @relation(fields: [id_game], references: [id])
+}
+
+model post {
+  id           String         @id @default(cuid())
+  content      String         @db.VarChar(255)
+  createdAt    DateTime       @default(now())
+  photo        String         @db.VarChar(255)
+  user         user           @relation(fields: [id_user], references: [id])
+  id_user      String
+  post_comment post_comment[]
+  post_like    post_like[]
+}
+
+model post_comment {
+  id        String   @id @default(cuid())
+  content   String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  post      post     @relation(fields: [id_post], references: [id])
+  id_post   String
+  user      user     @relation(fields: [id_user], references: [id])
+  id_user   String
+}
+
+model post_like {
+  id_post String
+  id_user String
+  post    post   @relation(fields: [id_post], references: [id])
+  user    user   @relation(fields: [id_user], references: [id])
+
+  @@id([id_post, id_user])
 }
 
 enum RoleEnum {
