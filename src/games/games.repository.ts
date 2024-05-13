@@ -80,6 +80,15 @@ export class GamesRepository {
             note: true,
           },
         },
+        news: {
+          select: {
+            id: true,
+            title: true,
+            logo: true,
+            createdAt: true,
+          },
+          take: 3,
+        },
       },
     });
 }
