@@ -14,21 +14,39 @@ datasource db {
 }
 
 model user {
-  id                    String         @id @default(cuid())
-  email                 String         @unique @db.VarChar(100)
-  pseudo                String         @unique @db.VarChar(30)
-  profilePicture        String?        @default("default") @db.VarChar(255)
-  password              String         @db.VarChar(255)
-  role                  RoleEnum       @default(USER)
-  resetPasswordCode     String?        @db.VarChar(255)
-  resetPasswordCodeDate Int?           @db.Int()
-  createdAt             DateTime       @default(now())
-  updatedAt             DateTime       @updatedAt
+  id                    String              @id @default(cuid())
+  email                 String              @unique @db.VarChar(100)
+  pseudo                String              @unique @db.VarChar(30)
+  profilePicture        String?             @default("default") @db.VarChar(255)
+  password              String              @db.VarChar(255)
+  role                  RoleEnum            @default(USER)
+  resetPasswordCode     String?             @db.VarChar(255)
+  resetPasswordCodeDate Int?                @db.Int()
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
   user_setting          user_setting[]
   game_advice           game_advice[]
   post                  post[]
   post_comment          post_comment[]
   post_like             post_like[]
+  staff_request         staff_request[]
+  user_notification     user_notification[]
+}
+
+model notification {
+  id                String              @id @default(cuid())
+  notificationType  NotificationEnum
+  user_notification user_notification[]
+}
+
+model user_notification {
+  id              String       @id @default(cuid())
+  id_user         String
+  id_notification String
+  user            user         @relation(fields: [id_user], references: [id])
+  notification    notification @relation(fields: [id_notification], references: [id])
+  content         String       @db.VarChar(255)
+  isRead          Boolean      @default(false)
 }
 
 model setting {
@@ -44,6 +62,15 @@ model user_setting {
   setting    setting @relation(fields: [id_setting], references: [id])
 
   @@id([id_user, id_setting])
+}
+
+model staff_request {
+  id        String           @id @default(cuid())
+  id_user   String
+  user      user             @relation(fields: [id_user], references: [id])
+  content   String           @db.Text()
+  status    StaffRequestEnum @default(WAITING)
+  createdAt DateTime         @default(now())
 }
 
 model game {
@@ -144,6 +171,18 @@ enum RoleEnum {
   ADMIN
   MODERATOR
   USER
+}
+
+enum NotificationEnum {
+  EMAIL
+  LIKES
+  COMMENT
+}
+
+enum StaffRequestEnum {
+  WAITING
+  ACCEPTED
+  REFUSED
 }
 
 enum MediaEnum {
