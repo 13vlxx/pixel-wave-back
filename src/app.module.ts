@@ -12,6 +12,7 @@ import { AdvicesModule } from './advices/advices.module';
 import { CategoriesModule } from './categories/categories.module';
 import { HomeModule } from './home/home.module';
 import { PlatformsModule } from './platforms/platforms.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { PlatformsModule } from './platforms/platforms.module';
     CategoriesModule,
     HomeModule,
     PlatformsModule,
+    NewsModule,
   ],
   controllers: [],
   providers: [],
