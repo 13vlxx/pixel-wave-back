@@ -109,7 +109,8 @@ model game_category {
 
 model news {
   id        String   @id @default(cuid())
-  id_game   game     @relation(fields: [id], references: [id])
+  id_game   String
+  game      game     @relation(fields: [id_game], references: [id])
   title     String   @db.VarChar(255)
   logo      String   @db.VarChar(255)
   content   String   @db.Text()

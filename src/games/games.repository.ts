@@ -51,6 +51,15 @@ export class GamesRepository {
             path: true,
           },
         },
+        game_category: {
+          select: {
+            category: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
         game_platform: {
           select: {
             platform: {
