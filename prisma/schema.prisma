@@ -31,6 +31,7 @@ model user {
   post_like             post_like[]
   staff_request         staff_request[]
   user_notification     user_notification[]
+  favorite_game         favorite_game[]
 }
 
 model notification {
@@ -84,7 +85,17 @@ model game {
   game_category game_category[]
   game_platform game_platform[]
   game_advice   game_advice[]
+  favorite_game favorite_game[]
   news          news[]
+}
+
+model favorite_game {
+  id_game String
+  id_user String
+  game    game   @relation(fields: [id_game], references: [id])
+  user    user   @relation(fields: [id_user], references: [id])
+
+  @@id([id_game, id_user])
 }
 
 model game_advice {
@@ -108,13 +119,14 @@ model game_category {
 }
 
 model news {
-  id        String   @id @default(cuid())
+  id        String         @id @default(cuid())
   id_game   String
-  game      game     @relation(fields: [id_game], references: [id])
-  title     String   @db.VarChar(255)
-  logo      String   @db.VarChar(255)
-  content   String   @db.Text()
-  createdAt DateTime @default(now())
+  game      game           @relation(fields: [id_game], references: [id])
+  title     String         @db.VarChar(255)
+  logo      String         @db.VarChar(255)
+  content   String         @db.Text()
+  createdAt DateTime       @default(now())
+  status    NewsStatusEnum @default(WAITING)
 }
 
 model category {
@@ -185,6 +197,12 @@ enum RoleEnum {
 }
 
 enum StaffRequestEnum {
+  WAITING
+  ACCEPTED
+  REFUSED
+}
+
+enum NewsStatusEnum {
   WAITING
   ACCEPTED
   REFUSED
