@@ -53,20 +53,12 @@ export class GamesRepository {
         },
         game_category: {
           select: {
-            category: {
-              select: {
-                name: true,
-              },
-            },
+            category: true,
           },
         },
         game_platform: {
           select: {
-            platform: {
-              select: {
-                name: true,
-              },
-            },
+            platform: true,
           },
         },
         game_advice: {

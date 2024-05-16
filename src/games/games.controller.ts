@@ -1,5 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
+import { Protect } from 'src/auth/_utils/decorators/protect.decorator';
+import { UserSchema } from 'src/users/_utils/user.schema';
+import { CreateAdviceDto } from './_utils/dtos/requests/create-advice.dto';
 import { GamesService } from './games.service';
 
 @Controller('games')
@@ -11,5 +15,16 @@ export class GamesController {
   @ApiOperation({ summary: 'Find a game by name' })
   findGameByName(@Param('name') name: string) {
     return this.gamesService.findGameByName(name);
+  }
+
+  @Protect()
+  @Post(':id/advice')
+  @ApiOperation({ summary: 'Post advice for a game' })
+  newAdvice(
+    @ConnectedUser() user: UserSchema,
+    @Body() createAdviceDto: CreateAdviceDto,
+    @Param('id') gameId: string,
+  ) {
+    return this.gamesService.newAdvice(user, createAdviceDto, gameId);
   }
 }
