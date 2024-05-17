@@ -93,6 +93,22 @@ export class GamesRepository {
       },
     });
 
+  findUserFavoriteGames = (id: string) =>
+    this.prismaService.favorite_game.findMany({
+      where: {
+        id_user: id,
+      },
+      select: {
+        game: {
+          select: {
+            id: true,
+            name: true,
+            logo: true,
+          },
+        },
+      },
+    });
+
   checkIfFavorite = (id: string, gameId: string) =>
     this.prismaService.favorite_game.findFirst({
       where: {

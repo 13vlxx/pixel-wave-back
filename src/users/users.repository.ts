@@ -11,7 +11,19 @@ export class UsersRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   findById = (id: string) =>
-    this.prismaService.user.findUnique({ where: { id } });
+    this.prismaService.user
+      .findUnique({
+        where: { id },
+        select: {
+          id: true,
+          email: true,
+          pseudo: true,
+          profilePicture: true,
+          role: true,
+          createdAt: true,
+        },
+      })
+      .catch(() => new NotFoundException('User not found'));
 
   findByEmail = (email: string) =>
     this.prismaService.user.findUnique({
