@@ -18,6 +18,26 @@ export class GamesController {
   }
 
   @Protect()
+  @Get(':id/favorite')
+  @ApiOperation({ summary: 'Check if a game is in user favorites' })
+  checkIfFavorite(
+    @ConnectedUser() user: UserSchema,
+    @Param('id') gameId: string,
+  ) {
+    return this.gamesService.checkIfFavorite(user, gameId);
+  }
+
+  @Protect()
+  @Put(':id/favorite')
+  @ApiOperation({ summary: 'Add a game to user favorites' })
+  toggleFavorite(
+    @ConnectedUser() user: UserSchema,
+    @Param('id') gameId: string,
+  ) {
+    return this.gamesService.toggleFavorite(user, gameId);
+  }
+
+  @Protect()
   @Post(':id/advice')
   @ApiOperation({ summary: 'Post advice for a game' })
   newAdvice(

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -92,4 +92,34 @@ export class GamesRepository {
         },
       },
     });
+
+  checkIfFavorite = (id: string, gameId: string) =>
+    this.prismaService.favorite_game.findFirst({
+      where: {
+        id_user: id,
+        id_game: gameId,
+      },
+    });
+
+  addFavorite = (id: string, gameId: string) =>
+    this.prismaService.favorite_game
+      .create({
+        data: {
+          id_user: id,
+          id_game: gameId,
+        },
+      })
+      .catch(() => new ConflictException('Already in favorites'));
+
+  removeFavorite = (id: string, gameId: string) =>
+    this.prismaService.favorite_game
+      .delete({
+        where: {
+          id_game_id_user: {
+            id_user: id,
+            id_game: gameId,
+          },
+        },
+      })
+      .catch(() => new ConflictException('Not in favorites'));
 }

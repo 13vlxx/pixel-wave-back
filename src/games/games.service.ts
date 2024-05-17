@@ -21,6 +21,11 @@ export class GamesService {
     return game;
   }
 
+  async checkIfFavorite(user: UserSchema, gameId: string) {
+    const fav = await this.gamesRepository.checkIfFavorite(user.id, gameId);
+    return fav ? true : false;
+  }
+
   async newAdvice(
     user: UserSchema,
     createAdviceDto: CreateAdviceDto,
@@ -62,5 +67,16 @@ export class GamesService {
       gameId,
       updateAdviceDto,
     );
+  }
+
+  async toggleFavorite(user: UserSchema, gameId: string) {
+    const fav = await this.gamesRepository.checkIfFavorite(user.id, gameId);
+    if (fav) {
+      this.gamesRepository.removeFavorite(user.id, gameId);
+      return false;
+    } else {
+      this.gamesRepository.addFavorite(user.id, gameId);
+      return true;
+    }
   }
 }
