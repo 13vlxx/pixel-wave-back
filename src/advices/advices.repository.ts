@@ -66,4 +66,22 @@ export class AdvicesRepository {
         note: createAdviceDto.note,
       },
     });
+
+  updateAdvice = (
+    userId: string,
+    gameId: string,
+    updateAdviceDto: CreateAdviceDto,
+  ) =>
+    this.prismaService.game_advice.update({
+      where: {
+        id_game_id_user: {
+          id_game: gameId,
+          id_user: userId,
+        },
+      },
+      data: {
+        advice: updateAdviceDto.advice,
+        note: updateAdviceDto.note,
+      },
+    });
 }

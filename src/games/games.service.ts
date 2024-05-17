@@ -40,4 +40,27 @@ export class GamesService {
       createAdviceDto,
     );
   }
+
+  async updateAdvice(
+    user: UserSchema,
+    updateAdviceDto: CreateAdviceDto,
+    gameId: string,
+  ) {
+    const advice = await this.advicesRepository.checkIfUserAlreadyPostedAdvice(
+      user.id,
+      gameId,
+    );
+
+    if (!advice)
+      throw new NotFoundException('You did not post an advice for this game');
+
+    if (advice.id_user !== user.id)
+      throw new ConflictException('Imposible update');
+
+    return this.advicesRepository.updateAdvice(
+      user.id,
+      gameId,
+      updateAdviceDto,
+    );
+  }
 }

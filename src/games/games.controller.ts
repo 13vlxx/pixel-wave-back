@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
 import { Protect } from 'src/auth/_utils/decorators/protect.decorator';
@@ -26,5 +26,16 @@ export class GamesController {
     @Param('id') gameId: string,
   ) {
     return this.gamesService.newAdvice(user, createAdviceDto, gameId);
+  }
+
+  @Protect()
+  @Put(':id/advice')
+  @ApiOperation({ summary: 'Post advice for a game' })
+  updateAdvice(
+    @ConnectedUser() user: UserSchema,
+    @Body() createAdviceDto: CreateAdviceDto,
+    @Param('id') gameId: string,
+  ) {
+    return this.gamesService.updateAdvice(user, createAdviceDto, gameId);
   }
 }
