@@ -10,5 +10,23 @@ export class PostsRepository {
       where: {
         id_user: id,
       },
+      select: {
+        id: true,
+        content: true,
+        photo: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            pseudo: true,
+            profilePicture: true,
+          },
+        },
+        _count: {
+          select: {
+            post_like: true,
+          },
+        },
+      },
     });
 }

@@ -21,10 +21,23 @@ export class UsersService {
       logo: fav.game.logo,
     }));
     const posts = await this.postsRepository.findAllUserPosts(user.id);
+    const postsWithLikes = posts.map((post) => ({
+      id: post.id,
+      content: post.content,
+      createdAt: post.createdAt,
+      photo: post.photo,
+      user: {
+        id: post.user.id,
+        pseudo: post.user.pseudo,
+        profilePicture: post.user.profilePicture,
+      },
+      likes: post._count.post_like,
+    }));
+
     return {
       user: u,
       favoriteGames,
-      posts,
+      posts: postsWithLikes,
     };
   }
 }

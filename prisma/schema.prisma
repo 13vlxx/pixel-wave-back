@@ -164,7 +164,7 @@ model post {
   id           String         @id @default(cuid())
   content      String         @db.VarChar(255)
   createdAt    DateTime       @default(now())
-  photo        String         @db.VarChar(255)
+  photo        String?        @db.VarChar(255)
   user         user           @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id_user      String
   post_comment post_comment[]

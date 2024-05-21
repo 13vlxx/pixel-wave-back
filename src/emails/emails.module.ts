@@ -1,4 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from 'src/_utils/config/config';
@@ -21,10 +22,10 @@ import { EmailsService } from './emails.service';
             pass: configService.get('SMTP_PASSWORD'),
           },
         },
-        // template: {
-        //   dir: join(__dirname, '..', 'emails', 'template'),
-        //   adapter: new EjsAdapter(),
-        // },
+        template: {
+          dir: __dirname + '/templates',
+          adapter: new EjsAdapter(),
+        },
       }),
     }),
   ],
