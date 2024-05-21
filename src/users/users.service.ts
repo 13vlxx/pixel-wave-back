@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GamesRepository } from 'src/games/games.repository';
+import { PostDto } from 'src/posts/_utils/dtos/responses/post.dto';
+import { PostsMapper } from 'src/posts/posts.mapper';
 import { PostsRepository } from 'src/posts/posts.repository';
 import { UserSchema } from './_utils/user.schema';
 import { UsersRepository } from './users.repository';
@@ -10,6 +12,7 @@ export class UsersService {
     private readonly usersRepository: UsersRepository,
     private readonly gamesRepository: GamesRepository,
     private readonly postsRepository: PostsRepository,
+    private readonly postsMapper: PostsMapper,
   ) {}
 
   async getProfile(user: UserSchema) {
@@ -20,24 +23,14 @@ export class UsersService {
       name: fav.game.name,
       logo: fav.game.logo,
     }));
-    const posts = await this.postsRepository.findAllUserPosts(user.id);
-    const postsWithLikes = posts.map((post) => ({
-      id: post.id,
-      content: post.content,
-      createdAt: post.createdAt,
-      photo: post.photo,
-      user: {
-        id: post.user.id,
-        pseudo: post.user.pseudo,
-        profilePicture: post.user.profilePicture,
-      },
-      likes: post._count.post_like,
-    }));
+    const posts: PostDto[] = await this.postsRepository.findAllUserPosts(
+      user.id,
+    );
 
     return {
       user: u,
       favoriteGames,
-      posts: postsWithLikes,
+      posts: posts.map((post) => this.postsMapper.toPostWithLikesDto(post)),
     };
   }
 }
