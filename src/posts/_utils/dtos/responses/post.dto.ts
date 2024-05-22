@@ -11,4 +11,5 @@ export interface PostDto {
   };
   content: string;
   photo: string;
+  likedByCurrentUser: boolean;
 }
