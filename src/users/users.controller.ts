@@ -14,6 +14,6 @@ export class UsersController {
   @ApiOperation({ summary: 'Get user profile' })
   @Get('/me')
   me(@ConnectedUser() user: UserSchema) {
-    return this.usersService.getProfile(user);
+    return this.usersService.getMe(user);
   }
 }

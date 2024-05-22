@@ -12,12 +12,29 @@ export class UsersService {
     private readonly postsRepository: PostsRepository,
   ) {}
 
-  async getProfile(user: UserSchema) {
+  async getMe(user: UserSchema) {
     const u = await this.usersRepository.findById(user.id);
     const favoriteGames = await this.gamesRepository.findUserFavoriteGames(
       user.id,
     );
     const posts = await this.postsRepository.findAllUserPosts(user.id, user.id);
+    return {
+      user: u,
+      favoriteGames,
+      posts: posts,
+    };
+  }
+
+  async getUserProfile(connectedUser: UserSchema, userId: string) {
+    console.log(connectedUser, connectedUser.id);
+    const u = await this.usersRepository.findById(userId);
+    const favoriteGames = await this.gamesRepository.findUserFavoriteGames(
+      connectedUser.id,
+    );
+    const posts = await this.postsRepository.findAllUserPosts(
+      userId,
+      connectedUser.id,
+    );
 
     return {
       user: u,
