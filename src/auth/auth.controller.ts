@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/_utils/dtos/requests/create-user.dto';
+import { Protect } from './_utils/decorators/protect.decorator';
 import { ForgetPasswordDto } from './_utils/dtos/requests/forget-password.dto';
 import { LoginUserDto } from './_utils/dtos/requests/login-user.dto';
 import { ResetPasswordDto } from './_utils/dtos/requests/reset-password.dto';
@@ -30,6 +31,7 @@ export class AuthController {
     return this.authService.forgotPassword(forgetPasswordDto);
   }
 
+  @Protect()
   @Post('reset-password')
   @HttpCode(204)
   @ApiOperation({ summary: 'Reset the password' })
