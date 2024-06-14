@@ -193,6 +193,7 @@ model post_like {
 enum RoleEnum {
   ADMIN
   MODERATOR
+  CERTIFIED
   USER
 }
 

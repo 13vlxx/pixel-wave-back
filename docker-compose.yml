@@ -1,5 +1,5 @@
 services:
-  mysql:
+  database:
     image: mysql:latest
     container_name: pw_mysql
     ports:
@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: motdepasse
     volumes:
-      - pw_database:/var/lib/mysql:Z
+      - mysql_data:/var/lib/mysql:Z
     restart: always
 
   phpmyadmin:
@@ -16,10 +16,10 @@ services:
     ports:
       - '8080:80'
     links:
-      - mysql:db
+      - database:db
     restart: always
 
 volumes:
-  pw_database:
+  mysql_data:
     external: true
     name: mysql_data

@@ -14,5 +14,6 @@ export interface UserSchema {
 enum UserRole {
   ADMIN = 'ADMIN',
   MODERATOR = 'MODERATOR',
+  CERTIFIED = 'CERTIFIED',
   USER = 'USER',
 }

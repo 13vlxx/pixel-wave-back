@@ -20,7 +20,6 @@ export class UsersService {
   async getMe(user: user) {
     const u = await this.usersRepository.findById(user.id);
     const recieveEmails = await this.settingsService.checkRecieveEmails(user);
-    console.log(recieveEmails);
     const favoriteGames = await this.gamesRepository.findUserFavoriteGames(
       user.id,
     );
