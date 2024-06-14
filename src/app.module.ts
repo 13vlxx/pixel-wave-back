@@ -14,6 +14,7 @@ import { HomeModule } from './home/home.module';
 import { PlatformsModule } from './platforms/platforms.module';
 import { NewsModule } from './news/news.module';
 import { PostsModule } from './posts/posts.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PostsModule } from './posts/posts.module';
     PlatformsModule,
     NewsModule,
     PostsModule,
+    SettingsModule,
   ],
   controllers: [],
   providers: [],
