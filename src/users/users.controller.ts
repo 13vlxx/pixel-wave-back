@@ -21,11 +21,11 @@ export class UsersController {
   @Protect()
   @HttpCode(204)
   @ApiOperation({ summary: 'Update user settings' })
-  @Patch('/settings')
-  updateUserSettings(
+  @Patch('/profile')
+  updateUserProfile(
     @ConnectedUser() user: user,
     @Body() updateSettingsDto: UpdateSettingsDto,
   ) {
-    return this.usersService.updateSettings(user, updateSettingsDto);
+    return this.usersService.updateProfile(user, updateSettingsDto);
   }
 }

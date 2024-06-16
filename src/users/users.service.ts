@@ -32,7 +32,7 @@ export class UsersService {
     };
   }
 
-  async updateSettings(user: user, updateSettingsDto: UpdateSettingsDto) {
+  async updateProfile(user: user, updateSettingsDto: UpdateSettingsDto) {
     const { recieveEmails } = updateSettingsDto;
     if (updateSettingsDto.password != null)
       await this.usersRepository.updatePassword(

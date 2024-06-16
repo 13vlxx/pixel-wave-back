@@ -46,7 +46,13 @@ export class UsersRepository {
 
   create = (createUserDto: CreateUserDto, hashedPassword: string) =>
     this.prismaService.user
-      .create({ data: { ...createUserDto, password: hashedPassword } })
+      .create({
+        data: {
+          ...createUserDto,
+          password: hashedPassword,
+          profilePicture: null,
+        },
+      })
       .catch((error) => new ConflictException('Email already exists'));
 
   updateCode = (
