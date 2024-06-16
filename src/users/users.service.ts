@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { user } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { GamesRepository } from 'src/games/games.repository';
 import { PostsRepository } from 'src/posts/posts.repository';
 import { SettingsService } from 'src/settings/settings.service';
 import { UpdateSettingsDto } from './_utils/dtos/requests/update-settings.dto';
-import { UserSchema } from './_utils/user.schema';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
@@ -32,6 +31,22 @@ export class UsersService {
     };
   }
 
+  async getUserProfile(user: user, targetId: string) {
+    const u = await this.usersRepository.findById(targetId);
+    if (!u) throw new NotFoundException('User not found');
+    const favoriteGames =
+      await this.gamesRepository.findUserFavoriteGames(targetId);
+    const posts = await this.postsRepository.findAllUserPosts(
+      targetId,
+      user.id,
+    );
+    return {
+      user: u,
+      favoriteGames,
+      posts: posts,
+    };
+  }
+
   async updateProfile(user: user, updateSettingsDto: UpdateSettingsDto) {
     const { recieveEmails } = updateSettingsDto;
     if (updateSettingsDto.password != null)
@@ -41,23 +56,5 @@ export class UsersService {
       );
 
     return this.settingsService.toggleRecieveEmails(user, recieveEmails);
-  }
-
-  async getUserProfile(connectedUser: UserSchema, userId: string) {
-    console.log(connectedUser, connectedUser.id);
-    const u = await this.usersRepository.findById(userId);
-    const favoriteGames = await this.gamesRepository.findUserFavoriteGames(
-      connectedUser.id,
-    );
-    const posts = await this.postsRepository.findAllUserPosts(
-      userId,
-      connectedUser.id,
-    );
-
-    return {
-      user: u,
-      favoriteGames,
-      posts: posts,
-    };
   }
 }

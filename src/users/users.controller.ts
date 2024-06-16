@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Patch } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { user } from '@prisma/client';
 import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
@@ -16,6 +16,16 @@ export class UsersController {
   @Get('/me')
   me(@ConnectedUser() user: user) {
     return this.usersService.getMe(user);
+  }
+
+  @Protect()
+  @Get('/:targetId')
+  @ApiOperation({ summary: 'Get user profile by id' })
+  getUserProfile(
+    @ConnectedUser() user: user,
+    @Param('targetId') targetId: string,
+  ) {
+    return this.usersService.getUserProfile(user, targetId);
   }
 
   @Protect()

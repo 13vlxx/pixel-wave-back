@@ -59,8 +59,8 @@ model setting {
 model user_setting {
   id_user    String
   id_setting String
-  user       user    @relation(fields: [id_user], references: [id])
-  setting    setting @relation(fields: [id_setting], references: [id])
+  user       user    @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  setting    setting @relation(fields: [id_setting], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([id_user, id_setting])
 }
