@@ -51,6 +51,9 @@ export class UsersRepository {
           ...createUserDto,
           password: hashedPassword,
           profilePicture: null,
+          user_setting: {
+            create: [{ id_setting: 'clxegm11n000012xgjjriob9w' }],
+          },
         },
       })
       .catch((error) => new ConflictException('Email already exists'));

@@ -2,7 +2,7 @@ import { DECORATORS } from '@nestjs/swagger/dist/constants';
 import { RoleEnum } from '@prisma/client';
 
 export function ProtectedAutoRolesDecorator(...roles: RoleEnum[]): any {
-  return (target: any, key: any, descriptor: PropertyDescriptor) => {
+  return (_: any, __: any, descriptor: PropertyDescriptor) => {
     const current =
       Reflect.getMetadata(DECORATORS.API_OPERATION, descriptor.value) || {};
     const rolesSummary =

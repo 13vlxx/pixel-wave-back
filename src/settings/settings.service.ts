@@ -7,9 +7,9 @@ import { SettingsRepository } from './settings.repository';
 export class SettingsService {
   constructor(private readonly settingsRepository: SettingsRepository) {}
 
-  async checkRecieveEmails(user: user) {
+  async checkReceiveEmails(user: user) {
     const setting = await this.settingsRepository.findByName(
-      SettingsName.RECIEVE_EMAILS,
+      SettingsName.RECEIVE_EMAILS,
     );
 
     if (!setting) throw new NotFoundException('Setting not found');
@@ -22,9 +22,9 @@ export class SettingsService {
     return userSetting ? true : false;
   }
 
-  async toggleRecieveEmails(user: user, recieveEmails: boolean) {
+  async toggleReceiveEmails(user: user, receive: boolean) {
     const setting = await this.settingsRepository.findByName(
-      SettingsName.RECIEVE_EMAILS,
+      SettingsName.RECEIVE_EMAILS,
     );
 
     if (!setting) throw new NotFoundException('Setting not found');
@@ -34,9 +34,9 @@ export class SettingsService {
       setting.id,
     );
 
-    if (recieveEmails && !userSetting)
+    if (receive && !userSetting)
       await this.settingsRepository.createUserSetting(user.id, setting.id);
-    else if (!recieveEmails && userSetting)
+    else if (!receive && userSetting)
       await this.settingsRepository.deleteUserSetting(user.id, setting.id);
     return;
   }

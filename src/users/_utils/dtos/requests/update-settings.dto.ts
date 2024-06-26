@@ -7,5 +7,5 @@ export class UpdateSettingsDto {
   password?: string;
 
   @IsBoolean()
-  recieveEmails: boolean;
+  receiveEmails: boolean;
 }

@@ -1,3 +1,3 @@
 export enum SettingsName {
-  RECIEVE_EMAILS = 'RECIEVE_EMAILS',
+  RECEIVE_EMAILS = 'RECEIVE_EMAILS',
 }

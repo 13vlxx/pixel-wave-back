@@ -18,14 +18,14 @@ export class UsersService {
 
   async getMe(user: user) {
     const u = await this.usersRepository.findById(user.id);
-    const recieveEmails = await this.settingsService.checkRecieveEmails(user);
+    const receiveEmails = await this.settingsService.checkReceiveEmails(user);
     const favoriteGames = await this.gamesRepository.findUserFavoriteGames(
       user.id,
     );
     const posts = await this.postsRepository.findAllUserPosts(user.id, user.id);
     return {
       user: u,
-      recieveEmails,
+      receiveEmails,
       favoriteGames,
       posts: posts,
     };
@@ -48,13 +48,13 @@ export class UsersService {
   }
 
   async updateProfile(user: user, updateSettingsDto: UpdateSettingsDto) {
-    const { recieveEmails } = updateSettingsDto;
+    const { receiveEmails } = updateSettingsDto;
     if (updateSettingsDto.password != null)
       await this.usersRepository.updatePassword(
         user.email,
         bcrypt.hashSync(updateSettingsDto.password, 10),
       );
 
-    return this.settingsService.toggleRecieveEmails(user, recieveEmails);
+    return this.settingsService.toggleReceiveEmails(user, receiveEmails);
   }
 }

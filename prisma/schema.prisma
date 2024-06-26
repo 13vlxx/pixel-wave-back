@@ -35,8 +35,8 @@ model user {
 }
 
 model notification {
-  id                String              @id @default(cuid())
-  notificationType  String              @db.VarChar(255)
+  id                String               @id @default(cuid())
+  notificationType  NotificationTypeEnum
   user_notification user_notification[]
 }
 
@@ -195,6 +195,11 @@ enum RoleEnum {
   MODERATOR
   CERTIFIED
   USER
+}
+
+enum NotificationTypeEnum {
+  NEW_COMMENT
+  NEW_LIKE
 }
 
 enum StaffRequestEnum {
