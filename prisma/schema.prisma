@@ -34,20 +34,14 @@ model user {
   favorite_game         favorite_game[]
 }
 
-model notification {
-  id                String               @id @default(cuid())
-  notificationType  NotificationTypeEnum
-  user_notification user_notification[]
-}
-
 model user_notification {
-  id              String       @id @default(cuid())
-  id_user         String
-  id_notification String
-  user            user         @relation(fields: [id_user], references: [id])
-  notification    notification @relation(fields: [id_notification], references: [id])
-  content         String       @db.VarChar(255)
-  isRead          Boolean      @default(false)
+  id               String               @id @default(cuid())
+  id_user          String
+  id_notification  String
+  user             user                 @relation(fields: [id_user], references: [id])
+  notificationType NotificationTypeEnum
+  content          String               @db.VarChar(255)
+  isRead           Boolean              @default(false)
 }
 
 model setting {
