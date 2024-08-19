@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { user } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import * as dayjs from 'dayjs';
 import { EmailsService } from 'src/emails/emails.service';
@@ -39,7 +40,7 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
 
-    const user = await this.usersRepository.findByEmail(email);
+    const user: user = await this.usersRepository.findByEmail(email);
     if (!user) throw new ConflictException('User not found');
 
     const isValid = await bcrypt.compare(password, user.password);

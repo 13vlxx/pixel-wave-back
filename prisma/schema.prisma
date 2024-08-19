@@ -17,7 +17,7 @@ model user {
   id                    String              @id @default(cuid())
   email                 String              @unique @db.VarChar(100)
   pseudo                String              @unique @db.VarChar(30)
-  profilePicture        String?             @default("default") @db.VarChar(255)
+  profilePicture        String?             @db.VarChar(255)
   password              String              @db.VarChar(255)
   role                  RoleEnum            @default(USER)
   resetPasswordCode     String?             @db.VarChar(255)
@@ -34,20 +34,14 @@ model user {
   favorite_game         favorite_game[]
 }
 
-model notification {
-  id                String              @id @default(cuid())
-  notificationType  String              @db.VarChar(255)
-  user_notification user_notification[]
-}
-
 model user_notification {
-  id              String       @id @default(cuid())
-  id_user         String
-  id_notification String
-  user            user         @relation(fields: [id_user], references: [id])
-  notification    notification @relation(fields: [id_notification], references: [id])
-  content         String       @db.VarChar(255)
-  isRead          Boolean      @default(false)
+  id               String               @id @default(cuid())
+  id_user          String
+  id_notification  String
+  user             user                 @relation(fields: [id_user], references: [id])
+  notificationType NotificationTypeEnum
+  content          String               @db.VarChar(255)
+  isRead           Boolean              @default(false)
 }
 
 model setting {
@@ -59,8 +53,8 @@ model setting {
 model user_setting {
   id_user    String
   id_setting String
-  user       user    @relation(fields: [id_user], references: [id])
-  setting    setting @relation(fields: [id_setting], references: [id])
+  user       user    @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  setting    setting @relation(fields: [id_setting], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([id_user, id_setting])
 }
@@ -164,8 +158,8 @@ model post {
   id           String         @id @default(cuid())
   content      String         @db.VarChar(255)
   createdAt    DateTime       @default(now())
-  photo        String         @db.VarChar(255)
-  user         user           @relation(fields: [id_user], references: [id])
+  photo        String?        @db.VarChar(255)
+  user         user           @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id_user      String
   post_comment post_comment[]
   post_like    post_like[]
@@ -175,17 +169,17 @@ model post_comment {
   id        String   @id @default(cuid())
   content   String   @db.VarChar(255)
   createdAt DateTime @default(now())
-  post      post     @relation(fields: [id_post], references: [id])
+  post      post     @relation(fields: [id_post], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id_post   String
-  user      user     @relation(fields: [id_user], references: [id])
+  user      user     @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id_user   String
 }
 
 model post_like {
   id_post String
   id_user String
-  post    post   @relation(fields: [id_post], references: [id])
-  user    user   @relation(fields: [id_user], references: [id])
+  post    post   @relation(fields: [id_post], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user    user   @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([id_post, id_user])
 }
@@ -193,7 +187,13 @@ model post_like {
 enum RoleEnum {
   ADMIN
   MODERATOR
+  CERTIFIED
   USER
+}
+
+enum NotificationTypeEnum {
+  NEW_COMMENT
+  NEW_LIKE
 }
 
 enum StaffRequestEnum {
