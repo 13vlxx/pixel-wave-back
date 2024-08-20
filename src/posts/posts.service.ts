@@ -1,18 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { user } from '@prisma/client';
+import { NotificationsRepository } from 'src/notifications/notifications.repository';
+import { NotificationsService } from 'src/notifications/notifications.service';
 import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly postsRepository: PostsRepository) {}
+  constructor(
+    private readonly postsRepository: PostsRepository,
+    private readonly notificationsService: NotificationsService,
+    private readonly notificationsRepository: NotificationsRepository,
+  ) {}
 
   async toggleLike(user: user, postId: string) {
     if (!(await this.postsRepository.getPostById(postId))) {
       throw new NotFoundException("Le post n'existe pas");
     }
 
-    const like = await this.postsRepository.toggleLike(user.id, postId);
+    await this.postsRepository.toggleLike(user.id, postId);
 
-    return like;
+    if (await this.notificationsService.checkReceiveNotifications(user))
+      if (await this.postsRepository.checkLike(user.id, postId))
+        this.notificationsRepository.createLikeNotification(user.id, postId);
+      else
+        await this.notificationsRepository.deleteLikeNotification(
+          user.id,
+          postId,
+        );
   }
 }

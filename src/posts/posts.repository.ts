@@ -156,7 +156,7 @@ export class PostsRepository {
         })),
       );
 
-  toggleLike = (userId: string, postId: string) =>
+  toggleLike = async (userId: string, postId: string) =>
     this.prismaService.post_like
       .findFirst({
         where: {
@@ -183,4 +183,12 @@ export class PostsRepository {
           });
         }
       });
+
+  checkLike = async (userId: string, postId: string) =>
+    this.prismaService.post_like.findFirst({
+      where: {
+        id_user: userId,
+        id_post: postId,
+      },
+    });
 }
