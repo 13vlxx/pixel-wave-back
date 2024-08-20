@@ -32,8 +32,13 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService<EnvironmentVariables, true>);
   await app.listen(configService.get('PORT'));
-  new Logger().debug(
-    `Server running on http://localhost:${configService.get('PORT')}`,
-  );
+  setTimeout(() => {
+    new Logger().debug(
+      `Server running on http://localhost:${configService.get('PORT')}/api`,
+    );
+    new Logger().verbose(
+      `Swagger : http://localhost:${configService.get('PORT')}/api/doc`,
+    );
+  }, 1000);
 }
 bootstrap();
