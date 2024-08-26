@@ -21,6 +21,7 @@ export class PostsRepository {
               id: true,
               pseudo: true,
               profilePicture: true,
+              role: true,
             },
           },
           _count: {
@@ -66,6 +67,7 @@ export class PostsRepository {
               id: true,
               pseudo: true,
               profilePicture: true,
+              role: true,
             },
           },
           _count: {
@@ -119,6 +121,7 @@ export class PostsRepository {
               id: true,
               pseudo: true,
               profilePicture: true,
+              role: true,
             },
           },
           _count: {

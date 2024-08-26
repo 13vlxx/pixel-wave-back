@@ -3,10 +3,14 @@ import { user } from '@prisma/client';
 import { SettingsName } from 'src/settings/_utils/settings.enum';
 import { SettingsRepository } from 'src/settings/settings.repository';
 import { UpdateReceiveNotificationsDto } from './_utils/dtos/requests/update-receive-notifications.dto';
+import { NotificationsRepository } from './notifications.repository';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly settingsRepository: SettingsRepository) {}
+  constructor(
+    private readonly notificationsRepository: NotificationsRepository,
+    private readonly settingsRepository: SettingsRepository,
+  ) {}
 
   async toggleReceiveNotifications(
     user: user,
@@ -47,6 +51,6 @@ export class NotificationsService {
   }
 
   getNotifications(user: user) {
-    return this.checkReceiveNotifications(user);
+    return this.notificationsRepository.getUserNotifications(user.id);
   }
 }

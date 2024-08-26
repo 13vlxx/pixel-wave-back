@@ -41,6 +41,7 @@ model user_notification {
   notificationType NotificationTypeEnum
   destinationId    String               @db.VarChar(255)
   isRead           Boolean              @default(false)
+  createdAt        DateTime             @default(now())
 }
 
 model setting {
