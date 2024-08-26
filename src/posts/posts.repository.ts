@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -194,4 +194,15 @@ export class PostsRepository {
         id_post: postId,
       },
     });
+
+  deletePost = (postId: string) =>
+    this.prismaService.post
+      .delete({
+        where: {
+          id: postId,
+        },
+      })
+      .catch(() => {
+        throw new ConflictException('Post not found');
+      });
 }

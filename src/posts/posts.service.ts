@@ -28,4 +28,14 @@ export class PostsService {
           postId,
         );
   }
+
+  async deletePost(user: user, postId: string) {
+    const post = await this.postsRepository.getPostById(postId);
+    if (!post || post.user.id != user.id) {
+      throw new NotFoundException("Le post n'existe pas");
+    }
+
+    await this.postsRepository.deletePost(postId);
+    await this.notificationsRepository.deletePostNotifications(postId);
+  }
 }

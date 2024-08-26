@@ -1,4 +1,12 @@
-import { Controller, Get, HttpCode, Param, Put, Query } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { user } from '@prisma/client';
 import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
@@ -23,9 +31,17 @@ export class PostsController {
 
   @Protect()
   @Put(':postId')
-  @ApiOperation({ summary: 'Update post with id' })
+  @ApiOperation({ summary: 'Like post with id' })
   @HttpCode(204)
   updatePost(@ConnectedUser() user: user, @Param('postId') postId: string) {
     return this.postsService.toggleLike(user, postId);
+  }
+
+  @Protect()
+  @Delete(':postId')
+  @ApiOperation({ summary: 'Delete post with id' })
+  @HttpCode(204)
+  deletePost(@ConnectedUser() user: user, @Param('postId') postId: string) {
+    return this.postsService.deletePost(user, postId);
   }
 }

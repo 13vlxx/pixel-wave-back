@@ -46,4 +46,11 @@ export class NotificationsRepository {
         notificationType: 'NEW_LIKE',
       },
     });
+
+  deletePostNotifications = (postId: string) =>
+    this.prismaService.user_notification.deleteMany({
+      where: {
+        destinationId: postId,
+      },
+    });
 }
