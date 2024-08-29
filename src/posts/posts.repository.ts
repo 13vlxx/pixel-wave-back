@@ -1,11 +1,20 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GetPostWithCommentsDto } from './_utils/dtos/responses/get-post-with-comments.dto';
+import { GetPostDto } from './_utils/dtos/responses/get-post.dto';
 
 @Injectable()
 export class PostsRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  getPostById = (postId: string, currentUserId?: string) =>
+  getPostById = (
+    postId: string,
+    currentUserId?: string,
+  ): Promise<GetPostWithCommentsDto> =>
     this.prismaService.post
       .findUnique({
         where: {
@@ -30,6 +39,21 @@ export class PostsRepository {
               post_comment: true,
             },
           },
+          post_comment: {
+            select: {
+              id: true,
+              content: true,
+              user: {
+                select: {
+                  id: true,
+                  pseudo: true,
+                  profilePicture: true,
+                  role: true,
+                },
+              },
+              createdAt: true,
+            },
+          },
           post_like: {
             select: {
               id_user: true,
@@ -46,15 +70,30 @@ export class PostsRepository {
           id: post.user.id,
           pseudo: post.user.pseudo,
           profilePicture: post.user.profilePicture,
+          role: post.user.role,
         },
         likes: post._count.post_like,
         comments: post._count.post_comment,
+        postComments: post.post_comment.map((comment) => ({
+          id: comment.id,
+          content: comment.content,
+          user: {
+            id: comment.user.id,
+            pseudo: comment.user.pseudo,
+            profilePicture: comment.user.profilePicture,
+            role: comment.user.role,
+          },
+          createdAt: comment.createdAt,
+        })),
         isLiked: post.post_like.some((like) =>
           currentUserId ? like.id_user === currentUserId : false,
         ),
-      }));
+      }))
+      .catch(() => {
+        throw new NotFoundException('Post not found');
+      });
 
-  getPostsFeed = async (currentUserId?: string) =>
+  getPostsFeed = (currentUserId?: string): Promise<GetPostDto[]> =>
     this.prismaService.post
       .findMany({
         select: {
@@ -96,6 +135,7 @@ export class PostsRepository {
             id: post.user.id,
             pseudo: post.user.pseudo,
             profilePicture: post.user.profilePicture,
+            role: post.user.role,
           },
           likes: post._count.post_like,
           comments: post._count.post_comment,
@@ -105,7 +145,10 @@ export class PostsRepository {
         })),
       );
 
-  findAllUserPosts = async (userId: string, currentUserId: string) =>
+  findAllUserPosts = async (
+    userId: string,
+    currentUserId: string,
+  ): Promise<GetPostDto[]> =>
     this.prismaService.post
       .findMany({
         where: {
@@ -150,6 +193,7 @@ export class PostsRepository {
             id: post.user.id,
             pseudo: post.user.pseudo,
             profilePicture: post.user.profilePicture,
+            role: post.user.role,
           },
           likes: post._count.post_like,
           comments: post._count.post_comment,

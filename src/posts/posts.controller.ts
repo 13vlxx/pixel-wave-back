@@ -29,6 +29,17 @@ export class PostsController {
     return this.postsRepository.getPostsFeed(currentUserId);
   }
 
+  // TODO: Get post by id
+  @Get(':postId')
+  @ApiOperation({ summary: 'Get post by id' })
+  @ApiQuery({ name: 'currentUserId', required: false, type: String })
+  getPostById(
+    @Param('postId') postId: string,
+    @Query('currentUserId') currentUserId?: string,
+  ) {
+    return this.postsRepository.getPostById(postId, currentUserId);
+  }
+
   @Protect()
   @Put(':postId')
   @ApiOperation({ summary: 'Like post with id' })
