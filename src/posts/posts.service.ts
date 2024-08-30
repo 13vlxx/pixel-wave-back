@@ -13,11 +13,18 @@ export class PostsService {
   ) {}
 
   async toggleLike(user: user, postId: string) {
-    if (!(await this.postsRepository.getPostById(postId))) {
+    const post = await this.postsRepository.getPostById(postId);
+    if (!post) {
       throw new NotFoundException("Le post n'existe pas");
     }
 
     await this.postsRepository.toggleLike(user.id, postId);
+
+    if (user.id === post.user.id) return;
+
+    //TODO: rework bdd, add (createdBy: user) to notification
+
+    console.log(user.id, post.user.id);
 
     if (await this.notificationsService.checkReceiveNotifications(user))
       if (await this.postsRepository.checkLike(user.id, postId))

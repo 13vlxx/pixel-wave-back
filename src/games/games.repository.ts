@@ -63,6 +63,11 @@ export class GamesRepository {
           },
         },
         game_advice: {
+          where: {
+            game: {
+              name,
+            },
+          },
           select: {
             user: {
               select: {

@@ -29,7 +29,6 @@ export class PostsController {
     return this.postsRepository.getPostsFeed(currentUserId);
   }
 
-  // TODO: Get post by id
   @Get(':postId')
   @ApiOperation({ summary: 'Get post by id' })
   @ApiQuery({ name: 'currentUserId', required: false, type: String })
