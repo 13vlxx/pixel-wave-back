@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { AdvicesRepository } from 'src/advices/advices.repository';
 import { UserSchema } from 'src/users/_utils/user.schema';
-import { CreateAdviceDto } from './_utils/dtos/requests/create-advice.dto';
+import { CreateAdviceDto } from '../advices/_utils/dtos/requests/create-advice.dto';
 import { GamesRepository } from './games.repository';
 
 @Injectable()

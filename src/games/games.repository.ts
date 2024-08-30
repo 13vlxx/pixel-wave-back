@@ -1,11 +1,12 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GetLiteGameDto } from './_utils/dtos/responses/get-lite-game.dto';
 
 @Injectable()
 export class GamesRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  findAllLite = () =>
+  findAllLite = (): Promise<GetLiteGameDto[]> =>
     this.prismaService.game.findMany({
       select: {
         id: true,
@@ -68,6 +69,7 @@ export class GamesRepository {
                 id: true,
                 pseudo: true,
                 profilePicture: true,
+                role: true,
               },
             },
             game: {

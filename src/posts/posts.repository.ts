@@ -53,6 +53,9 @@ export class PostsRepository {
               },
               createdAt: true,
             },
+            orderBy: {
+              createdAt: 'desc',
+            },
           },
           post_like: {
             select: {
