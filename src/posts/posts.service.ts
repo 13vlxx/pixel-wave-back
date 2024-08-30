@@ -45,4 +45,12 @@ export class PostsService {
     await this.postsRepository.deletePost(postId);
     await this.notificationsRepository.deletePostNotifications(postId);
   }
+
+  async deleteComment(user: user, commentId: string) {
+    const comment = await this.postsRepository.getCommentById(commentId);
+    if (!comment || comment.id_user != user.id)
+      throw new NotFoundException("Le commentaire n'existe pas");
+
+    return this.postsRepository.deleteComment(commentId);
+  }
 }

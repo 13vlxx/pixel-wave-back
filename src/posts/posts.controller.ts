@@ -54,4 +54,15 @@ export class PostsController {
   deletePost(@ConnectedUser() user: user, @Param('postId') postId: string) {
     return this.postsService.deletePost(user, postId);
   }
+
+  @Protect()
+  @Delete('comment/:commentId')
+  @ApiOperation({ summary: 'Delete comment with id' })
+  @HttpCode(204)
+  deleteComment(
+    @ConnectedUser() user: user,
+    @Param('commentId') commentId: string,
+  ) {
+    return this.postsService.deleteComment(user, commentId);
+  }
 }

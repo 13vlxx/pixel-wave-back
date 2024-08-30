@@ -96,6 +96,17 @@ export class PostsRepository {
         throw new NotFoundException('Post not found');
       });
 
+  getCommentById = (commentId: string) =>
+    this.prismaService.post_comment
+      .findUnique({
+        where: {
+          id: commentId,
+        },
+      })
+      .catch(() => {
+        throw new NotFoundException('Comment not found');
+      });
+
   getPostsFeed = (currentUserId?: string): Promise<GetPostDto[]> =>
     this.prismaService.post
       .findMany({
@@ -251,5 +262,16 @@ export class PostsRepository {
       })
       .catch(() => {
         throw new ConflictException('Post not found');
+      });
+
+  deleteComment = (commentId: string) =>
+    this.prismaService.post_comment
+      .delete({
+        where: {
+          id: commentId,
+        },
+      })
+      .catch(() => {
+        throw new ConflictException('Comment not found');
       });
 }
