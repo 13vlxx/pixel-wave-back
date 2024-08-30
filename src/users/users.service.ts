@@ -31,14 +31,14 @@ export class UsersService {
     };
   }
 
-  async getUserProfile(user: user, targetId: string) {
+  async getUserProfile(targetId: string, currentUserId?: string) {
     const u = await this.usersRepository.findById(targetId);
     if (!u) throw new NotFoundException('User not found');
     const favoriteGames =
       await this.gamesRepository.findUserFavoriteGames(targetId);
     const posts = await this.postsRepository.findAllUserPosts(
       targetId,
-      user.id,
+      currentUserId,
     );
     return {
       user: u,
