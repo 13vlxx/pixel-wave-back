@@ -1,7 +1,6 @@
 services:
   database:
     image: mysql:latest
-    # container_name: pw_mysql
     ports:
       - '3307:3306'
     environment:
@@ -9,7 +8,6 @@ services:
     env_file: .docker.env
     volumes:
       - mysql_data:/var/lib/mysql:Z
-    # restart: always
 
   s3:
     image: minio/minio:latest
@@ -25,12 +23,10 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    # container_name: pw_phpmyadmin
     ports:
       - '8080:80'
     links:
       - database:db
-    # restart: always
 
 volumes:
   mysql_data:
