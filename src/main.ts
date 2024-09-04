@@ -12,6 +12,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const log = new Logger();
+
   app
     .setGlobalPrefix('api')
     .useGlobalPipes(
@@ -46,9 +48,10 @@ async function bootstrap() {
     new Logger().error(
       `Server running on http://localhost:${configService.get('PORT')}/api`,
     );
-    new Logger().error(
+    log.error(
       `Swagger : http://localhost:${configService.get('PORT')}/api/doc`,
     );
+    log.error(`S3 Bucket : http://localhost:8900`);
   }, 1000);
 }
 bootstrap();

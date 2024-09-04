@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   Param,
+  Post,
   Put,
   Query,
 } from '@nestjs/common';
@@ -11,6 +13,7 @@ import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { user } from '@prisma/client';
 import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
 import { Protect } from 'src/auth/_utils/decorators/protect.decorator';
+import { CreatePostDto } from './_utils/dtos/requests/create-post.dto';
 import { PostsRepository } from './posts.repository';
 import { PostsService } from './posts.service';
 
@@ -45,6 +48,16 @@ export class PostsController {
   @HttpCode(204)
   updatePost(@ConnectedUser() user: user, @Param('postId') postId: string) {
     return this.postsService.toggleLike(user, postId);
+  }
+
+  @Protect()
+  @Post()
+  @ApiOperation({ summary: 'Create a new post' })
+  createPost(
+    @ConnectedUser() user: user,
+    @Body() createPostDto: CreatePostDto,
+  ) {
+    return this.postsService.createPost(user, createPostDto);
   }
 
   @Protect()

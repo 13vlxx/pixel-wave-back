@@ -1,7 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { user } from '@prisma/client';
 import { NotificationsRepository } from 'src/notifications/notifications.repository';
 import { NotificationsService } from 'src/notifications/notifications.service';
+import { CreatePostDto } from './_utils/dtos/requests/create-post.dto';
 import { PostsRepository } from './posts.repository';
 
 @Injectable()
@@ -34,6 +39,13 @@ export class PostsService {
           user.id,
           postId,
         );
+  }
+
+  async createPost(user: user, createPostDto: CreatePostDto) {
+    const post = await this.postsRepository.createPost(user, createPostDto);
+    if (!post) throw new ConflictException("Le post n'a pas pu être créé");
+
+    return post;
   }
 
   async deletePost(user: user, postId: string) {

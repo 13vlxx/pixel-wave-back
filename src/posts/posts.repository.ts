@@ -3,7 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { user } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreatePostDto } from './_utils/dtos/requests/create-post.dto';
 import { GetPostWithCommentsDto } from './_utils/dtos/responses/get-post-with-comments.dto';
 import { GetPostDto } from './_utils/dtos/responses/get-post.dto';
 
@@ -216,6 +218,15 @@ export class PostsRepository {
           ),
         })),
       );
+
+  createPost = (user: user, createPostDto: CreatePostDto) =>
+    this.prismaService.post.create({
+      data: {
+        content: createPostDto.content,
+        photo: createPostDto.photo,
+        id_user: user.id,
+      },
+    });
 
   toggleLike = async (userId: string, postId: string) =>
     this.prismaService.post_like
