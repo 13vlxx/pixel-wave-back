@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { user } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MinioService } from '../minio/minio.service';
 import { CreateCommentDto } from './_utils/dtos/requests/create-comment.dto';
 import { CreatePostDto } from './_utils/dtos/requests/create-post.dto';
 import { GetPostWithCommentsDto } from './_utils/dtos/responses/get-post-with-comments.dto';
@@ -12,7 +13,10 @@ import { GetPostDto } from './_utils/dtos/responses/get-post.dto';
 
 @Injectable()
 export class PostsRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly minioService: MinioService,
+  ) {}
 
   getPostById = (
     postId: string,
@@ -67,35 +71,54 @@ export class PostsRepository {
           },
         },
       })
-      .then((post) => ({
-        id: post.id,
-        content: post.content,
-        createdAt: post.createdAt,
-        photo: post.photo,
-        user: {
-          id: post.user.id,
-          pseudo: post.user.pseudo,
-          profilePicture: post.user.profilePicture,
-          role: post.user.role,
-        },
-        likes: post._count.post_like,
-        comments: post._count.post_comment,
-        postComments: post.post_comment.map((comment) => ({
-          id: comment.id,
-          content: comment.content,
-          user: {
-            id: comment.user.id,
-            pseudo: comment.user.pseudo,
-            profilePicture: comment.user.profilePicture,
-            role: comment.user.role,
-          },
-          createdAt: comment.createdAt,
-        })),
-        isLiked: post.post_like.some((like) =>
-          currentUserId ? like.id_user === currentUserId : false,
-        ),
-      }))
-      .catch(() => {
+      .then((post) => {
+        if (!post) throw new NotFoundException('Post not found');
+
+        return Promise.all([
+          post.photo ? this.minioService.getPresignedUrl(post.photo) : null,
+          this.minioService.getPresignedUrl(post.user.profilePicture),
+          Promise.all(
+            post.post_comment.map((comment) =>
+              this.minioService.getPresignedUrl(comment.user.profilePicture),
+            ),
+          ),
+        ]).then(
+          ([
+            postPhotoUrl,
+            userProfilePictureUrl,
+            commentUserProfilePictureUrls,
+          ]) => ({
+            id: post.id,
+            content: post.content,
+            createdAt: post.createdAt,
+            photo: postPhotoUrl,
+            user: {
+              id: post.user.id,
+              pseudo: post.user.pseudo,
+              profilePicture: userProfilePictureUrl,
+              role: post.user.role,
+            },
+            likes: post._count.post_like,
+            comments: post._count.post_comment,
+            postComments: post.post_comment.map((comment, index) => ({
+              id: comment.id,
+              content: comment.content,
+              user: {
+                id: comment.user.id,
+                pseudo: comment.user.pseudo,
+                profilePicture: commentUserProfilePictureUrls[index],
+                role: comment.user.role,
+              },
+              createdAt: comment.createdAt,
+            })),
+            isLiked: post.post_like.some((like) =>
+              currentUserId ? like.id_user === currentUserId : false,
+            ),
+          }),
+        );
+      })
+      .catch((error) => {
+        if (error instanceof NotFoundException) throw error;
         throw new NotFoundException('Post not found');
       });
 
@@ -143,23 +166,30 @@ export class PostsRepository {
         },
       })
       .then((posts) =>
-        posts.map((post) => ({
-          id: post.id,
-          content: post.content,
-          createdAt: post.createdAt,
-          photo: post.photo,
-          user: {
-            id: post.user.id,
-            pseudo: post.user.pseudo,
-            profilePicture: post.user.profilePicture,
-            role: post.user.role,
-          },
-          likes: post._count.post_like,
-          comments: post._count.post_comment,
-          isLiked: post.post_like.some((like) =>
-            currentUserId ? like.id_user === currentUserId : false,
+        Promise.all(
+          posts.map((post) =>
+            Promise.all([
+              post.photo ? this.minioService.getPresignedUrl(post.photo) : null,
+              this.minioService.getPresignedUrl(post.user.profilePicture),
+            ]).then(([photoUrl, profilePictureUrl]) => ({
+              id: post.id,
+              content: post.content,
+              createdAt: post.createdAt,
+              photo: photoUrl,
+              user: {
+                id: post.user.id,
+                pseudo: post.user.pseudo,
+                profilePicture: profilePictureUrl,
+                role: post.user.role,
+              },
+              likes: post._count.post_like,
+              comments: post._count.post_comment,
+              isLiked: post.post_like.some((like) =>
+                currentUserId ? like.id_user === currentUserId : false,
+              ),
+            })),
           ),
-        })),
+        ),
       );
 
   findAllUserPosts = async (
@@ -201,23 +231,30 @@ export class PostsRepository {
         },
       })
       .then((posts) =>
-        posts.map((post) => ({
-          id: post.id,
-          content: post.content,
-          createdAt: post.createdAt,
-          photo: post.photo,
-          user: {
-            id: post.user.id,
-            pseudo: post.user.pseudo,
-            profilePicture: post.user.profilePicture,
-            role: post.user.role,
-          },
-          likes: post._count.post_like,
-          comments: post._count.post_comment,
-          isLiked: post.post_like.some(
-            (like) => like.id_user === currentUserId,
+        Promise.all(
+          posts.map((post) =>
+            Promise.all([
+              post.photo ? this.minioService.getPresignedUrl(post.photo) : null,
+              this.minioService.getPresignedUrl(post.user.profilePicture),
+            ]).then(([photoUrl, profilePictureUrl]) => ({
+              id: post.id,
+              content: post.content,
+              createdAt: post.createdAt,
+              photo: photoUrl,
+              user: {
+                id: post.user.id,
+                pseudo: post.user.pseudo,
+                profilePicture: profilePictureUrl,
+                role: post.user.role,
+              },
+              likes: post._count.post_like,
+              comments: post._count.post_comment,
+              isLiked: post.post_like.some(
+                (like) => like.id_user === currentUserId,
+              ),
+            })),
           ),
-        })),
+        ),
       );
 
   createPost = (user: user, createPostDto: CreatePostDto) =>

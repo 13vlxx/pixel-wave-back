@@ -6,6 +6,7 @@ import {
 import { AdvicesRepository } from 'src/advices/advices.repository';
 import { UserSchema } from 'src/users/_utils/user.schema';
 import { CreateAdviceDto } from '../advices/_utils/dtos/requests/create-advice.dto';
+import { MinioService } from '../minio/minio.service';
 import { GamesRepository } from './games.repository';
 
 @Injectable()
@@ -13,11 +14,13 @@ export class GamesService {
   constructor(
     private readonly gamesRepository: GamesRepository,
     private readonly advicesRepository: AdvicesRepository,
+    private readonly minioService: MinioService,
   ) {}
 
   async findGameByName(name: string) {
     const game = await this.gamesRepository.findGameByName(name);
     if (!game) throw new NotFoundException('Game not found');
+
     return game;
   }
 

@@ -5,6 +5,7 @@ import { GamesRepository } from 'src/games/games.repository';
 import { PostsRepository } from 'src/posts/posts.repository';
 import { SettingsService } from 'src/settings/settings.service';
 import { UpdateSettingsDto } from './_utils/dtos/requests/update-settings.dto';
+import { GetUserDto } from './_utils/dtos/responses/get-user.dto';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
@@ -17,7 +18,8 @@ export class UsersService {
   ) {}
 
   async getMe(user: user) {
-    const u = await this.usersRepository.findById(user.id);
+    const u: GetUserDto = await this.usersRepository.findById(user.id);
+    if (!u) throw new NotFoundException('User not found');
     const receiveEmails = await this.settingsService.checkReceiveEmails(user);
     const favoriteGames = await this.gamesRepository.findUserFavoriteGames(
       user.id,
@@ -32,7 +34,7 @@ export class UsersService {
   }
 
   async getUserProfile(targetId: string, currentUserId?: string) {
-    const u = await this.usersRepository.findById(targetId);
+    const u: GetUserDto = await this.usersRepository.findById(targetId);
     if (!u) throw new NotFoundException('User not found');
     const favoriteGames =
       await this.gamesRepository.findUserFavoriteGames(targetId);
@@ -40,6 +42,7 @@ export class UsersService {
       targetId,
       currentUserId,
     );
+
     return {
       user: u,
       favoriteGames,

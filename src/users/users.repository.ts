@@ -4,11 +4,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MinioService } from '../minio/minio.service';
 import { CreateUserDto } from './_utils/dtos/requests/create-user.dto';
 
 @Injectable()
 export class UsersRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly minioService: MinioService,
+  ) {}
 
   findById = (id: string) =>
     this.prismaService.user
@@ -23,12 +27,24 @@ export class UsersRepository {
           createdAt: true,
         },
       })
-      .catch(() => new NotFoundException('User not found'));
+      .then(async (user) => ({
+        ...user,
+        profilePicture: await this.minioService.getPresignedUrl(
+          user.profilePicture,
+        ),
+      }));
 
   findByEmail = (email: string) =>
-    this.prismaService.user.findUnique({
-      where: { email },
-    });
+    this.prismaService.user
+      .findUnique({
+        where: { email },
+      })
+      .then(async (user) => ({
+        ...user,
+        profilePicture: await this.minioService.getPresignedUrl(
+          user.profilePicture,
+        ),
+      }));
 
   findByPseudo = (pseudo: string) =>
     this.prismaService.user.findUnique({ where: { pseudo } });
@@ -50,12 +66,17 @@ export class UsersRepository {
         data: {
           ...createUserDto,
           password: hashedPassword,
-          profilePicture: null,
           user_setting: {
             create: [{ id_setting: 'clxegm11n000012xgjjriob9w' }],
           },
         },
       })
+      .then(async (user) => ({
+        ...user,
+        profilePicture: await this.minioService.getPresignedUrl(
+          'defaults/profile-picture',
+        ),
+      }))
       .catch((error) => new ConflictException('Email already exists'));
 
   updateCode = (

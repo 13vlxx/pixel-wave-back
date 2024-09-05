@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as exifr from 'exifr';
 import { Client } from 'minio';
+import { MemoryStoredFile } from 'nestjs-form-data';
 import { EnvironmentVariables } from '../_utils/config/config';
 
 @Injectable()
@@ -42,4 +44,33 @@ export class MinioService {
       })
       .catch((err) => this.logger.error(err));
   }
+
+  async uploadFile(file: MemoryStoredFile, key: string) {
+    const exifData = await exifr.parse(file.buffer, { translateValues: false });
+    await this.minioClient.putObject(
+      this.minioBucketName,
+      key,
+      file.buffer,
+      file.size,
+      { 'Content-Type': file.mimetype },
+    );
+
+    const url = await this.getPresignedUrl(key);
+
+    return {
+      key: key,
+      fileName: file.originalName,
+      mimeType: file.mimetype,
+      createdAt:
+        exifData?.DateTimeOriginal ?? exifData?.CreateDate ?? new Date(),
+      size: file.size,
+      url: url,
+    };
+  }
+
+  getPresignedUrl = async (key: string): Promise<string> =>
+    this.minioClient.presignedGetObject(this.minioBucketName, key);
+
+  delteFiles = (keys: string[]) =>
+    this.minioClient?.removeObjects(this.minioBucketName, keys);
 }
