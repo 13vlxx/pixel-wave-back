@@ -11,6 +11,18 @@ export class EnvironmentVariables {
   MYSQL_DATABASE_URL: string;
 
   @IsString()
+  MINIO_URL: string;
+
+  @IsString()
+  MINIO_USER: string;
+
+  @IsString()
+  MINIO_PASSWORD: string;
+
+  @IsString()
+  MINIO_BUCKET_NAME: string = 'pixelwave';
+
+  @IsString()
   JWT_SECRET: string = 'PiXeeelWavEeSeCreeT';
 
   @IsString()
