@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAdviceDto } from 'src/games/_utils/dtos/requests/create-advice.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateAdviceDto } from './_utils/dtos/requests/create-advice.dto';
 
 @Injectable()
 export class AdvicesRepository {
@@ -14,6 +14,7 @@ export class AdvicesRepository {
             id: true,
             pseudo: true,
             profilePicture: true,
+            role: true,
           },
         },
         game: {

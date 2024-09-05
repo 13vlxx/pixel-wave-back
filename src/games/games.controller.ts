@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
 import { Protect } from 'src/auth/_utils/decorators/protect.decorator';
 import { UserSchema } from 'src/users/_utils/user.schema';
-import { CreateAdviceDto } from './_utils/dtos/requests/create-advice.dto';
+import { CreateAdviceDto } from '../advices/_utils/dtos/requests/create-advice.dto';
 import { GamesService } from './games.service';
 
 @Controller('games')

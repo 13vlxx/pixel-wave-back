@@ -1,25 +1,36 @@
 services:
   database:
     image: mysql:latest
-    container_name: pw_mysql
     ports:
       - '3307:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: motdepasse
+      MYSQL_ROOT_PASSWORD: Aa123456
+    env_file: .docker.env
     volumes:
       - mysql_data:/var/lib/mysql:Z
-    restart: always
+
+  s3:
+    image: minio/minio:latest
+    environment:
+      MINIO_ROOT_USER: pwadmin
+      MINIO_ROOT_PASSWORD: pwadmin0
+    ports:
+      - 9000:9000
+      - 8900:8900
+    volumes:
+      - minio:/data/minio
+    command: 'minio server /data/minio --console-address ":8900"'
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: pw_phpmyadmin
     ports:
       - '8080:80'
     links:
       - database:db
-    restart: always
 
 volumes:
   mysql_data:
     external: true
     name: mysql_data
+  minio:
+    driver: local

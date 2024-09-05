@@ -37,11 +37,11 @@ model user {
 model user_notification {
   id               String               @id @default(cuid())
   id_user          String
-  id_notification  String
   user             user                 @relation(fields: [id_user], references: [id])
   notificationType NotificationTypeEnum
-  content          String               @db.VarChar(255)
+  destinationId    String               @db.VarChar(255)
   isRead           Boolean              @default(false)
+  createdAt        DateTime             @default(now())
 }
 
 model setting {
