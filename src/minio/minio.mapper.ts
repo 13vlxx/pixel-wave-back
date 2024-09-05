@@ -9,6 +9,10 @@ export class MinioMapper {
     size: minioFile.size,
   });
   toUserProfileImageKey = (userId: string) => `users/${userId}/profile-picture`;
+  toCategoryLogoImageKey = (categoryId: string) =>
+    `categories/${categoryId}/image`;
+  toPlatformLogoImageKey = (platformId: string) =>
+    `platforms/${platformId}/image`;
   toGameLogoImageKey = (gameId: string) => `games/${gameId}/logo-image`;
   toDefaultsImageKey = (key: string) => `defaults/${key}`;
 }

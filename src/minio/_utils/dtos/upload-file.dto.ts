@@ -7,7 +7,7 @@ import {
 
 export class UploadFileDto {
   @IsFile()
-  @MaxFileSize(1e6)
-  @HasMimeType(['image/jpeg', 'image/png'])
+  @MaxFileSize(1e9)
+  @HasMimeType(['image/*'])
   file: MemoryStoredFile;
 }

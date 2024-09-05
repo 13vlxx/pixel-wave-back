@@ -46,7 +46,16 @@ export class MinioService {
   }
 
   async uploadFile(file: MemoryStoredFile, key: string) {
-    const exifData = await exifr.parse(file.buffer, { translateValues: false });
+    let exifData = null;
+
+    if (file.mimetype.startsWith('image/') && !file.mimetype.includes('gif')) {
+      try {
+        exifData = await exifr.parse(file.buffer, { translateValues: false });
+      } catch (error) {
+        this.logger.warn(`Failed to parse EXIF data: ${error.message}`);
+      }
+    }
+
     await this.minioClient.putObject(
       this.minioBucketName,
       key,
@@ -61,8 +70,6 @@ export class MinioService {
       key: key,
       fileName: file.originalName,
       mimeType: file.mimetype,
-      createdAt:
-        exifData?.DateTimeOriginal ?? exifData?.CreateDate ?? new Date(),
       size: file.size,
       url: url,
     };

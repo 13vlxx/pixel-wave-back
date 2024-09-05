@@ -16,6 +16,7 @@ export class MinioController {
     private readonly minioMapper: MinioMapper,
   ) {}
 
+  //ONLY FOR TEST
   @Protect()
   @Post('upload')
   @FormDataRequest()
@@ -25,7 +26,7 @@ export class MinioController {
   ) {
     return this.minioService.uploadFile(
       uploadFileDto.file,
-      'games/clxd9djfq00008rfsl39noq34/logo-image',
+      'platforms/clxeiq5xu0001guqh0zdl4mrl/image',
     );
   }
 
