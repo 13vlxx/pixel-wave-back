@@ -6,6 +6,7 @@ import {
 import { user } from '@prisma/client';
 import { NotificationsRepository } from 'src/notifications/notifications.repository';
 import { NotificationsService } from 'src/notifications/notifications.service';
+import { CreateCommentDto } from './_utils/dtos/requests/create-comment.dto';
 import { CreatePostDto } from './_utils/dtos/requests/create-post.dto';
 import { PostsRepository } from './posts.repository';
 
@@ -46,6 +47,17 @@ export class PostsService {
     if (!post) throw new ConflictException("Le post n'a pas pu être créé");
 
     return post;
+  }
+
+  async createComment(
+    user: user,
+    postId: string,
+    createCommentDto: CreateCommentDto,
+  ) {
+    const post = await this.postsRepository.getPostById(postId);
+    if (!post) throw new NotFoundException("Le post n'existe pas");
+
+    return this.postsRepository.createComment(user, postId, createCommentDto);
   }
 
   async deletePost(user: user, postId: string) {

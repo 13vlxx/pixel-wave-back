@@ -13,6 +13,7 @@ import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { user } from '@prisma/client';
 import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
 import { Protect } from 'src/auth/_utils/decorators/protect.decorator';
+import { CreateCommentDto } from './_utils/dtos/requests/create-comment.dto';
 import { CreatePostDto } from './_utils/dtos/requests/create-post.dto';
 import { PostsRepository } from './posts.repository';
 import { PostsService } from './posts.service';
@@ -58,6 +59,17 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
   ) {
     return this.postsService.createPost(user, createPostDto);
+  }
+
+  @Protect()
+  @Post(':postId/comment')
+  @ApiOperation({ summary: 'Create a new comment' })
+  createComment(
+    @ConnectedUser() user: user,
+    @Param('postId') postId: string,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    return this.postsService.createComment(user, postId, createCommentDto);
   }
 
   @Protect()

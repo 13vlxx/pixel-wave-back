@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { user } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateCommentDto } from './_utils/dtos/requests/create-comment.dto';
 import { CreatePostDto } from './_utils/dtos/requests/create-post.dto';
 import { GetPostWithCommentsDto } from './_utils/dtos/responses/get-post-with-comments.dto';
 import { GetPostDto } from './_utils/dtos/responses/get-post.dto';
@@ -223,7 +224,21 @@ export class PostsRepository {
     this.prismaService.post.create({
       data: {
         content: createPostDto.content,
-        photo: createPostDto.photo,
+        // TODO: upload photo
+        photo: 'createPostDto.photo',
+        id_user: user.id,
+      },
+    });
+
+  createComment = (
+    user: user,
+    postId: string,
+    createCommentDto: CreateCommentDto,
+  ) =>
+    this.prismaService.post_comment.create({
+      data: {
+        content: createCommentDto.content,
+        id_post: postId,
         id_user: user.id,
       },
     });
