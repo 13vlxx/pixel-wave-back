@@ -4,6 +4,9 @@ import * as bcrypt from 'bcrypt';
 import { GamesRepository } from 'src/games/games.repository';
 import { PostsRepository } from 'src/posts/posts.repository';
 import { SettingsService } from 'src/settings/settings.service';
+import { MinioMapper } from '../minio/minio.mapper';
+import { MinioService } from '../minio/minio.service';
+import { UpdateProfilePictureDto } from './_utils/dtos/requests/update-profile-picture.dto';
 import { UpdateSettingsDto } from './_utils/dtos/requests/update-settings.dto';
 import { GetUserDto } from './_utils/dtos/responses/get-user.dto';
 import { UsersRepository } from './users.repository';
@@ -15,6 +18,8 @@ export class UsersService {
     private readonly gamesRepository: GamesRepository,
     private readonly postsRepository: PostsRepository,
     private readonly settingsService: SettingsService,
+    private readonly minioService: MinioService,
+    private readonly minioMapper: MinioMapper,
   ) {}
 
   async getMe(user: user) {
@@ -59,5 +64,22 @@ export class UsersService {
       );
 
     return this.settingsService.toggleReceiveEmails(user, receiveEmails);
+  }
+
+  async updateProfilePicture(
+    user: user,
+    updateProfilePictureDto: UpdateProfilePictureDto,
+  ) {
+    const key = this.minioMapper.toUserProfileImageKey(user.id);
+    const uploadedFile = await this.minioService.uploadFile(
+      updateProfilePictureDto.profilePicture,
+      key,
+    );
+    if (!uploadedFile)
+      throw new NotFoundException(
+        'Erreur lors de la modification de la photo de profil',
+      );
+
+    return uploadedFile.url;
   }
 }

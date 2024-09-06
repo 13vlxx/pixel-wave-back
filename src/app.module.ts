@@ -25,6 +25,9 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({ validate: validateEnv, isGlobal: true }),
     ScheduleModule.forRoot(),
     CacheModule.register({ isGlobal: true }),
+    NestjsFormDataModule.config({
+      isGlobal: true,
+    }),
     AuthModule,
     PrismaModule,
     UsersModule,
@@ -40,7 +43,6 @@ import { UsersModule } from './users/users.module';
     StaffRequestsModule,
     NotificationsModule,
     MinioModule,
-    NestjsFormDataModule,
   ],
   controllers: [],
   providers: [],
