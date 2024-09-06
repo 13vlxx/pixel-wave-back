@@ -261,8 +261,7 @@ export class PostsRepository {
     this.prismaService.post.create({
       data: {
         content: createPostDto.content,
-        // TODO: upload photo
-        photo: 'createPostDto.photo',
+        photo: createPostDto.photo ? 'createPostDto.photo' : null,
         id_user: user.id,
       },
     });
@@ -337,4 +336,14 @@ export class PostsRepository {
       .catch(() => {
         throw new ConflictException('Comment not found');
       });
+
+  updatePostImage = (id: string, key: string) =>
+    this.prismaService.post.update({
+      where: {
+        id,
+      },
+      data: {
+        photo: key,
+      },
+    });
 }

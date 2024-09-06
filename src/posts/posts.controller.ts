@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { user } from '@prisma/client';
+import { FormDataRequest } from 'nestjs-form-data';
 import { ConnectedUser } from 'src/auth/_utils/decorators/connected-user.decorator';
 import { Protect } from 'src/auth/_utils/decorators/protect.decorator';
 import { CreateCommentDto } from './_utils/dtos/requests/create-comment.dto';
@@ -54,10 +55,12 @@ export class PostsController {
   @Protect()
   @Post()
   @ApiOperation({ summary: 'Create a new post' })
+  @FormDataRequest()
   createPost(
     @ConnectedUser() user: user,
     @Body() createPostDto: CreatePostDto,
   ) {
+    console.log(createPostDto.photo);
     return this.postsService.createPost(user, createPostDto);
   }
 
