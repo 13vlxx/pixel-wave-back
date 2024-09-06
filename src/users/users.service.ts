@@ -79,6 +79,7 @@ export class UsersService {
       throw new NotFoundException(
         'Erreur lors de la modification de la photo de profil',
       );
+    await this.usersRepository.updateProfilePicture(user.id, uploadedFile.key);
 
     return uploadedFile.url;
   }

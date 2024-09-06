@@ -102,4 +102,10 @@ export class UsersRepository {
         },
       })
       .catch((error) => new NotFoundException('Email not found'));
+
+  updateProfilePicture = (id: string, key: string) =>
+    this.prismaService.user.update({
+      where: { id },
+      data: { profilePicture: key },
+    });
 }
