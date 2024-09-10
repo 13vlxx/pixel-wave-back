@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { createId } from '@paralleldrive/cuid2';
 import { user } from '@prisma/client';
 import { NotificationsRepository } from 'src/notifications/notifications.repository';
 import { NotificationsService } from 'src/notifications/notifications.service';
@@ -47,13 +48,25 @@ export class PostsService {
   }
 
   async createPost(user: user, createPostDto: CreatePostDto) {
-    const post = await this.postsRepository.createPost(user, createPostDto);
-    if (!post) throw new ConflictException("Le post n'a pas pu être créé");
+    const id = createId();
+    let key: string = null;
 
     if (createPostDto.photo) {
-      const key = this.minioMapper.toPostImageKey(post.id);
-      await this.minioService.uploadFile(createPostDto.photo, key);
-      await this.postsRepository.updatePostImage(post.id, key);
+      key = this.minioMapper.toPostImageKey(id);
+      await this.minioService.uploadFile(createPostDto.photo, key).catch(() => {
+        throw new ConflictException("L'image n'a pas pu être sauvegardée");
+      });
+    }
+
+    const post = await this.postsRepository.createPost(
+      id,
+      user,
+      createPostDto,
+      key,
+    );
+    if (!post) {
+      this.minioService.delteFiles([key]);
+      throw new ConflictException("Le post n'a pas pu être créé");
     }
 
     return post;

@@ -60,7 +60,6 @@ export class PostsController {
     @ConnectedUser() user: user,
     @Body() createPostDto: CreatePostDto,
   ) {
-    console.log(createPostDto.photo);
     return this.postsService.createPost(user, createPostDto);
   }
 

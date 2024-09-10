@@ -257,11 +257,17 @@ export class PostsRepository {
         ),
       );
 
-  createPost = (user: user, createPostDto: CreatePostDto) =>
+  createPost = (
+    postId: string,
+    user: user,
+    createPostDto: CreatePostDto,
+    key?: string,
+  ) =>
     this.prismaService.post.create({
       data: {
+        id: postId,
         content: createPostDto.content,
-        photo: createPostDto.photo ? 'createPostDto.photo' : null,
+        photo: createPostDto.photo && key,
         id_user: user.id,
       },
     });
