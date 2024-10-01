@@ -19,6 +19,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { SettingsModule } from './settings/settings.module';
 import { StaffRequestsModule } from './staff-requests/staff-requests.module';
 import { UsersModule } from './users/users.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { UsersModule } from './users/users.module';
     StaffRequestsModule,
     NotificationsModule,
     MinioModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],

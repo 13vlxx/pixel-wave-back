@@ -35,16 +35,9 @@ export class UsersRepository {
       }));
 
   findByEmail = (email: string) =>
-    this.prismaService.user
-      .findUnique({
-        where: { email },
-      })
-      .then(async (user) => ({
-        ...user,
-        profilePicture: await this.minioService.getPresignedUrl(
-          user.profilePicture,
-        ),
-      }));
+    this.prismaService.user.findUnique({
+      where: { email },
+    });
 
   findByPseudo = (pseudo: string) =>
     this.prismaService.user.findUnique({ where: { pseudo } });
@@ -59,6 +52,16 @@ export class UsersRepository {
         },
       })
       .catch((error) => new NotFoundException('User not found'));
+
+  getBackOfficeUsers = () =>
+    this.prismaService.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        pseudo: true,
+        role: true,
+      },
+    });
 
   create = (createUserDto: CreateUserDto, hashedPassword: string) =>
     this.prismaService.user
